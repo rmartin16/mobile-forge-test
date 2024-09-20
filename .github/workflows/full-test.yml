@@ -35,6 +35,15 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: Setup Build Env
+      run: |
+        source ./setup-iOS.sh $(cut -d- -f1 <<< ${{ matrix.python-version }})
+        forge iOS libffi
+        forge iOS cffi
+        forge iOS bzip2
+        forge iOS openssl
+        forge iOS ninja
+
     - name: Build ${{ matrix.package }}
       run: |
         source ./setup-iOS.sh $(cut -d- -f1 <<< ${{ matrix.python-version }})
