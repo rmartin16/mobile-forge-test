@@ -29,5 +29,5 @@ def test_font():
     from PIL import ImageFont
 
     font = ImageFont.truetype(join(dirname(__file__), "Vera.ttf"), size=20)
-    font.getsize("Hello") == (51, 19)
-    font.getsize("Hello world") == (112, 19)
+    assert font.getsize("Hello") == (51, 19)
+    assert font.getsize("Hello world") == (112, 19)

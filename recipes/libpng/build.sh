@@ -1,22 +1,23 @@
 #!/bin/bash
 set -eu
 
-./configure --host=$HOST_TRIPLET --build=$BUILD_TRIPLET
-make -j $CPU_COUNT
-make install prefix=$PREFIX
+./configure --host="$HOST_TRIPLET" --build="$BUILD_TRIPLET"
+make -j "$CPU_COUNT"
+make install prefix="$PREFIX"
 
-find $PREFIX -type l | xargs rm
+find "$PREFIX" -type l -print0 | xargs -0 rm
 
-rm -r $PREFIX/bin
+# do not unintentionally delete /bin
+rm -r "${PREFIX:?}/bin"
 
-mv $PREFIX/include/libpng16/* $PREFIX/include
-rmdir $PREFIX/include/libpng16
+mv "$PREFIX/include/libpng16/"* "$PREFIX/include"
+rmdir "$PREFIX/include/libpng16"
 
 # Some versions of Android (e.g. API level 26) have a libpng.so in /system/lib, but our copy
 # has an SONAME of libpng16.so, so there's no conflict.
-# rm -r $PREFIX/lib/{*.a,*.la,pkgconfig}
+# rm -r "$PREFIX/lib/"{*.a,*.la,pkgconfig}
 
 # Downstream recipes expect the name libpng.a, not libpng16.a
-mv $PREFIX/lib/libpng16.a $PREFIX/lib/libpng.a
+mv "$PREFIX/lib/libpng16.a" "$PREFIX/lib/libpng.a"
 
-rm -r $PREFIX/share
+rm -r "$PREFIX/share"

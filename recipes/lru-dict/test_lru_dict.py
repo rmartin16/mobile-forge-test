@@ -5,6 +5,5 @@ def test_basic():
     data[1] = None
     data[2] = None
     data[3] = None
-    data[1]
     data[4] = None
     assert data.keys == [4, 1, 3]

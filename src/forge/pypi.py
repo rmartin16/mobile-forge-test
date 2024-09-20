@@ -13,11 +13,9 @@ START_YEAR = datetime.datetime.now().year - 3
 @lru_cache
 def get_pypi_releases(package_name):
     url = f"https://pypi.org/pypi/{package_name}/json"
-
     # ensure we're using a root certificate that works with PyPI
     context = ssl.create_default_context(cafile=certifi.where())
     releases = json.load(urlopen(url, context=context))["releases"]
-
     return releases
 
 

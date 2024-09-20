@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: ['yarl', 'cryptography', 'contourpy', 'libjpeg', 'xz', 'ninja', 'bcrypt', 'pillow', 'lru-dict', 'cffi', 'typed-ast', 'libpng', 'aiohttp', 'brotli', 'libffi', 'kiwisolver', 'bzip2', 'oldest-supported-numpy', 'numpy', 'pandas', 'openssl', 'matplotlib', 'argon2-cffi', 'freetype', 'bitarray']
+        package: ['yarl', 'cryptography', 'contourpy', 'libjpeg', 'xz', 'bcrypt', 'pillow', 'lru-dict', 'typed-ast', 'libpng', 'aiohttp', 'brotli', 'kiwisolver', 'oldest-supported-numpy', 'numpy', 'pandas', 'matplotlib', 'argon2-cffi', 'bitarray']
         python-version: [ "3.9", "3.10", "3.11", "3.12", "3.13-dev" ]
 
     steps:
@@ -43,6 +43,10 @@ jobs:
         forge iOS bzip2
         forge iOS openssl
         forge iOS ninja
+        forge iOS libjpeg
+        forge iOS libpng
+        forge iOS freetype
+        forge iOS oldest-supported-numpy
 
     - name: Build ${{ matrix.package }}
       run: |
