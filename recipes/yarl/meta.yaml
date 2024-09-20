@@ -1,0 +1,7 @@
+package:
+  name: yarl
+  version: 1.9.7
+
+requirements:
+  host:
+    - Cython
