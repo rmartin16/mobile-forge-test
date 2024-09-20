@@ -17,12 +17,13 @@ env:
 jobs:
   test:
     name: Test builds
-    runs-on: macOS-latest
+    runs-on: ${{ matrix.runs-on }}
     strategy:
       fail-fast: false
       matrix:
         package: ['yarl', 'cryptography', 'contourpy', 'libjpeg', 'xz', 'bcrypt', 'pillow', 'lru-dict', 'typed-ast', 'libpng', 'aiohttp', 'brotli', 'kiwisolver', 'oldest-supported-numpy', 'numpy', 'pandas', 'matplotlib', 'argon2-cffi', 'bitarray']
         python-version: [ "3.9", "3.10", "3.11", "3.12", "3.13-dev" ]
+        runs-on: ["macos-13", "macos-latest"]
 
     steps:
     - name: Checkout
@@ -43,9 +44,15 @@ jobs:
         forge iOS bzip2
         forge iOS openssl
         forge iOS ninja
+
+    - name: Extra Setup Build Env
+      if: contains(fromJSON('["matplotlib", "pillow"]'), matrix.package)
+      run: |
+        source ./setup-iOS.sh $(cut -d- -f1 <<< ${{ matrix.python-version }})
         forge iOS libjpeg
         forge iOS libpng
         forge iOS freetype
+        forge iOS numpy
         forge iOS oldest-supported-numpy
 
     - name: Build ${{ matrix.package }}
