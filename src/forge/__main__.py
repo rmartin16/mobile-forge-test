@@ -10,7 +10,7 @@ from forge.package import Package
 from forge.pypi import get_pypi_versions
 
 
-def main():
+def main() -> int:
     parser = argparse.ArgumentParser(
         description="Build binary wheels for mobile platforms"
     )
@@ -262,6 +262,8 @@ def main():
             print(f" * {name} {version if version else '(default version)'} ({tag})")
 
     print()
+
+    return 1 if failures else 0
 
 
 if __name__ == "__main__":
