@@ -16,7 +16,7 @@ requirements:
   host:
     - freetype 2.9.1
     - libpng 1.6.34
-    - numpy 1.26.0
+    - numpy 1.26.2
 
   build:
     - certifi
