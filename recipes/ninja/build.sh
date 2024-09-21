@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 set -eu
+
+: "${PREFIX?ENV VAR MUST BE SET}"
 
 mkdir -p "$PREFIX"
 cp -r ninja wheel

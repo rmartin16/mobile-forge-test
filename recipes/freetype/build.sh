@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 set -eu
+
+: "${PREFIX?ENV VAR MUST BE SET}"
 
 ./configure \
     --host="$HOST_TRIPLET" \
@@ -20,7 +22,7 @@ rmdir "$PREFIX/include/freetype2"
 
 # Some versions of Android (e.g. API level 26) have a libft2.so in /system/lib, but our copy
 # has an SONAME of libfreetype.so, so there's no conflict.
-# rm -r $PREFIX/lib/{*.a,*.la,pkgconfig}
-rm -r "$PREFIX/lib/"{*.la,pkgconfig}
-
-rm -r "$PREFIX/share"
+# find "${PREFIX:?}/lib/" -name "*.a" -exec rm -rf {} \;
+find "${PREFIX:?}/lib/" -name "*.la" -exec rm -rf {} \;
+rm -r "${PREFIX:?}/lib/pkgconfig"
+rm -r "${PREFIX:?}/share"

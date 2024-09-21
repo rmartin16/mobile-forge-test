@@ -1,6 +1,5 @@
-#!/bin/bash
-
-# set -e
+#!/bin/sh
+set -e
 
 usage() {
     echo "Usage:"
@@ -14,8 +13,21 @@ usage() {
     echo
 }
 
-# make sure the script is sourced
-if [ "${BASH_SOURCE[0]}" = "$0" ]; then
+# make sure the script is sourced (https://stackoverflow.com/a/28776166/8549606)
+SOURCED=0
+if [ -n "$ZSH_VERSION" ]; then
+  case $ZSH_EVAL_CONTEXT in *:file) SOURCED=1;; esac
+elif [ -n "$KSH_VERSION" ]; then
+  # shellcheck disable=SC2296
+  [ "$(cd -- "$(dirname -- "$0")" && pwd -P)/$(basename -- "$0")" != "$(cd -- "$(dirname -- "${.sh.file}")" && pwd -P)/$(basename -- "${.sh.file}")" ] && SOURCED=1
+elif [ -n "$BASH_VERSION" ]; then
+  (return 0 2>/dev/null) && SOURCED=1
+else # All other shells: examine $0 for known shell binary filenames.
+  # Detects `sh` and `dash`; add additional shell filenames as needed.
+  case ${0##*/} in sh|-sh|dash|-dash) SOURCED=1;; esac
+fi
+
+if [ "$SOURCED" = "0" ]; then
     echo "This script must be sourced."
     echo
     usage "$0"
@@ -72,9 +84,9 @@ if [ -z "$PYTHON_APPLE_SUPPORT" ]; then
 
         echo "Unpacking Python ${PYTHON_VER} b${SUPPORT_REVISION} support package"
         mkdir -p "$MOBILE_FORGE_SUPPORT_PATH/$PYTHON_VER/iOS"
-        pushd "$MOBILE_FORGE_SUPPORT_PATH/$PYTHON_VER/iOS" || exit
+        cd "$MOBILE_FORGE_SUPPORT_PATH/$PYTHON_VER/iOS"
         tar zxf "../../../downloads/Python-${PYTHON_VER}-iOS-support.b${SUPPORT_REVISION}.tar.gz"
-        popd || exit
+        cd -
     fi
 else
     export MOBILE_FORGE_SUPPORT_PATH="$PYTHON_APPLE_SUPPORT/support"
@@ -103,7 +115,7 @@ if [ ! -d "./venv$PYTHON_VER" ]; then
     $BUILD_PYTHON -m venv "venv$PYTHON_VER"
 
     # shellcheck disable=SC1090
-    source "./venv$PYTHON_VER/bin/activate"
+    . "./venv$PYTHON_VER/bin/activate"
 
     # Install basic environment artefacts
     pip install -U pip
@@ -135,5 +147,5 @@ if [ ! -d "./venv$PYTHON_VER" ]; then
 else
     echo "Using existing Python $PYTHON_VER environment."
     # shellcheck disable=SC1090
-    source "./venv$PYTHON_VER/bin/activate"
+    . "./venv$PYTHON_VER/bin/activate"
 fi

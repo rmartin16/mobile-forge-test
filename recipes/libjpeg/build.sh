@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 set -eu
+
+: "${PREFIX?ENV VAR MUST BE SET}"
 
 # SIMD is only available for x86, so disable for consistency between ABIs.
 ./configure \
@@ -10,7 +12,11 @@ set -eu
 make -j "$CPU_COUNT"
 make install prefix="$PREFIX"
 
-# do not unintentionally delete /bin
-rm -r "${PREFIX:?}/"{bin,doc,man}
-mv "$PREFIX/lib"?? "$PREFIX/lib"  # lib32 or lib64
-rm -r "$PREFIX/lib/"{*.la,pkgconfig}
+rm -r "${PREFIX:?}/bin"
+rm -r "$PREFIX/doc"
+rm -r "$PREFIX/man"
+
+mv "${PREFIX:?}/lib"?? "$PREFIX/lib"  # lib32 or lib64
+
+rm -r "${PREFIX:?}/lib/pkgconfig"
+find "${PREFIX:?}/lib/" -name "*.la" -exec rm -rf {} \;
